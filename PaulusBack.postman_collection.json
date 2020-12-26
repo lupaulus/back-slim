@@ -1,0 +1,66 @@
+{
+	"info": {
+		"_postman_id": "6854a9c2-b149-4dfe-8f15-b1e5465f82da",
+		"name": "PaulusBack",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n    {\n    \"id\":3,\n    \"civilite\":\"Monsieur\",\n    \"username\":\"log\",\n    \"password\":\"pass\",\n    \"firstName\":\"lucas\",\n    \"lastName\":\"paulus\",\n    \"address\":\"addresse radom\",\n    \"zipcode\":\"67000\",\n    \"tel\":\"03888888884\",\n    \"city\":\"ville\",\n    \"mail\":\"mail\",\n    \"country\":\"France\"\n    }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n    \"username\":\"log\",\n    \"password\":\"pass\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

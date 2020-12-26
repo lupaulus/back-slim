@@ -1,0 +1,4 @@
+vendor
+front/node_modules
+.DS_Store
+bootstrap.php
