@@ -15,6 +15,23 @@ return function (ContainerBuilder $containerBuilder) {
                 'level' => Logger::DEBUG,
                 'file_permission' => 0775
             ],
+            'doctrine' => [
+                'meta' => [
+                    'entity_path' => [
+                        '/src'
+                    ],
+                    'auto_generate_proxies' => true,
+                    'proxy_dir' =>  __DIR__.'/../cache/proxies',
+                    'cache' => null,
+                ],
+                'connection' => [
+                    'driver'   => 'pdo_pgsql',
+                    'host'     => 'localhost',
+                    'dbname'   => 'dbshop',
+                    'user'     => 'dbshop',
+                    'password' => 'changeme',
+                ]
+            ]
         ],
     ]);
 };

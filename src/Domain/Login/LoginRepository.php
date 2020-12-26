@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Login;
 
-interface LoginRepository
+interface LoginRepository 
 {
     /**
      * @return Login[]

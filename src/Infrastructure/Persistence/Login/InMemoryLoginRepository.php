@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\Login;
 use App\Domain\Login\Login;
 use App\Domain\Login\LoginRepository;
 use App\Domain\User\LoginNotFoundException;
+use Doctrine\ORM\EntityManager;
 use Logindb;
 
 
@@ -16,15 +17,17 @@ class InMemoryLoginRepository implements LoginRepository
      */
     private $logins;
 
+    private $entityManager;
+
     /**
      * InMemoryLoginRepository constructor.
      *
      * @param array|null $Logins
      */
-    public function __construct(array $logins = null)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->logins = $logins ?? [
-        ];
+        $this->logins = $logins ?? [];
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -32,18 +35,8 @@ class InMemoryLoginRepository implements LoginRepository
      */
     public function findAll(): array
     {
-        global $entityManager;
-        $loginrepo = $entityManager->getRepository('Logindb');
-        $arrayLogindb = $loginrepo->findAll();
-        $res = array();
-        foreach($arrayLogindb as &$val)
-        {
-            if($val instanceof Logindb )
-            {
-                array_push($res,$val->convert());
-            }
-        }
-
+        $loginrepo = $this->entityManager->getRepository('login');
+        $res = $loginrepo->findAll();
         return $res;
     }
 
@@ -54,18 +47,13 @@ class InMemoryLoginRepository implements LoginRepository
      */
     public function findLoginOfId(int $id): Login
     {
-        global $entityManager;
-        $loginrepo = $entityManager->getRepository('Logindb');
+        $loginrepo = $this->entityManager->getRepository('login');
         $val = $loginrepo->findOneBy(array('idLogin' => $id));
         if($val == null)
         {
             throw new LoginNotFoundException;
         }
-        if($val instanceof Logindb )
-        {
-            $res = $val->convert();
-        }
-        return $res;
+        return $val;
     }
 
     /**
@@ -75,38 +63,26 @@ class InMemoryLoginRepository implements LoginRepository
      */
     public function findbyUsername(string $username):Login
     {
-        global $entityManager;
-        $loginrepo = $entityManager->getRepository('Logindb');
+        $loginrepo = $this->entityManager->getRepository('login');
         $val = $loginrepo->findOneBy(array('username' => $username));
         if($val == null)
         {
             throw new LoginNotFoundException;
         }
-        if($val instanceof Logindb )
-        {
-            $res = $val->convert();
-        }
-        return $res;
+        return $val;
     }
 
-    public function createLogin(Login $login): int
+    public function createLogin(Login $loginbase): int
     {
-        global $entityManager;
-        $loginbase = $login->convertDb();
-        $entityManager->persist($loginbase);
-        $entityManager->flush();
-        
-        $loginrepo = $entityManager->getRepository('Logindb');
-        $val = $loginrepo->findOneBy(array('username' => $login->username));
+        $this->entityManager->persist($loginbase);
+        $this->entityManager->flush();
+        $loginrepo = $this->entityManager->getRepository('login');
+        $val = $loginrepo->findOneBy(array('username' => $loginbase->username));
         if($val == null)
         {
             throw new LoginNotFoundException;
         }
-        if($val instanceof Logindb )
-        {
-            return $val->getIdLogin();
-        }
-        return -1;
+        return $val->getIdLogin();
         
     }
 

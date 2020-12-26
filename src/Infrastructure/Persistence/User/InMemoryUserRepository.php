@@ -8,6 +8,7 @@ use App\Domain\Login\LoginRepository;
 use App\Domain\User\User;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Userdb;
 
 
@@ -21,14 +22,17 @@ class InMemoryUserRepository implements UserRepository
      */
     private $loginRepository;
 
+    private $entityManager;
+
     /**
      * InMemoryUserRepository constructor.
      *
      * @param array|null $users
      */
-    public function __construct(LoginRepository $loginRepository)
+    public function __construct(LoginRepository $loginRepository, EntityManager $entityManager)
     {
         $this->loginRepository = $loginRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -36,17 +40,8 @@ class InMemoryUserRepository implements UserRepository
      */
     public function findAll(): array
     {
-        global $entityManager;
-        $loginrepo = $entityManager->getRepository('Userdb');
-        $arrayLogindb = $loginrepo->findAll();
-        $res = array();
-        foreach($arrayLogindb as &$val)
-        {
-            if($val instanceof Userdb )
-            {
-                array_push($res,$val->convert());
-            }
-        }
+        $loginrepo = $this->entityManager->getRepository('user');
+        $res = $loginrepo->findAll();
         return $res;
 
     }
@@ -56,18 +51,13 @@ class InMemoryUserRepository implements UserRepository
      */
     public function findUserOfId(int $id): User
     {
-        global $entityManager;
-        $loginrepo = $entityManager->getRepository('Userdb');
+        $loginrepo = $this->entityManager->getRepository('user');
         $val = $loginrepo->findOneBy(array('idUser' => $id));
         if($val == null)
         {
             throw new UserNotFoundException;
         }
-        if($val instanceof Userdb )
-        {
-            $res = $val->convert();
-        }
-        return $res;
+        return $val;
     }
     
 
@@ -78,33 +68,24 @@ class InMemoryUserRepository implements UserRepository
      */
     public function findUserWithIdLogin(int $idLogin) : User
     {
-        global $entityManager;
-        $loginrepo = $entityManager->getRepository('Userdb');
+        $loginrepo = $this->entityManager->getRepository('user');
         $val = $loginrepo->findOneBy(array('idLogin' => $idLogin));
         if($val == null)
         {
             throw new UserNotFoundException;
         }
-        if($val instanceof Userdb )
-        {
-            $res = $val->convert();
-        }
-        return $res;
+        return $val;
     }
 
     public function createUser(User $user) : int
     {
-        global $entityManager;
         $l = new Login();
         $l->setUsername($user->username);
         $l->setPassword($user->password);
-        
         $idLogin = $this->loginRepository->createLogin($l);
-        $userbase = $user->convertDb();
-        $userbase->setIdLogin($idLogin);
-
-        $entityManager->persist($userbase);
-        $entityManager->flush();
+        $user->setIdLogin($idLogin);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
         return -1; 
     }
 }

@@ -16,4 +16,7 @@ $conn = array(
 'port' => '5432'
 );
 
+
 $entityManager = EntityManager::create($conn, $config);
+
+return $entityManager;

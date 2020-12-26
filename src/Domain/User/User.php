@@ -369,4 +369,14 @@ class User implements JsonSerializable
         return $this;
     }
 
+    public function getIdLogin() : int
+    {
+        return $this->login;
+    }
+
+    public function setIdLogin(int $idLogin)
+    {
+        $this->login = $idLogin; 
+    }
+
 }
