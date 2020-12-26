@@ -7,7 +7,7 @@ use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Userdb
+ * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
@@ -17,10 +17,10 @@ class User implements JsonSerializable
     /**
      * @var int
      *
-     * @ORM\Column(name="id_client", type="integer")
+     * @ORM\Column(name="idUser", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="user_id_client_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="user_id_user_seq", allocationSize=1, initialValue=1)
      */
     private $id;
     /**
@@ -79,7 +79,8 @@ class User implements JsonSerializable
     private $country;
 
     /**
-    * @ORM\OneToOne(targetEntity=Login::class)
+    * @ORM\OneToOne(targetEntity="App\Domain\Login\Login")
+    * @ORM\JoinColumn(name="idLogin", referencedColumnName="idLogin")
     */
     private $login;
 

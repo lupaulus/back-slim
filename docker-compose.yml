@@ -8,11 +8,28 @@ services:
     slim:
         image: php:7-alpine
         working_dir: /var/www
-        command: php -S 0.0.0.0:8080 -t public
+        command: php -S 0.0.0.0:8000 -t public
+        restart: always
         environment:
             docker: "true"
         ports:
-            - 8080:8080
+            - 8000:8000
         volumes:
             - .:/var/www
             - ./logs:/var/www/logs
+
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: 'dbshop'
+            POSTGRES_PASSWORD: 'changeme'
+            PGDATA: /data/postgres
+        ports:
+        - 5432:5432
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+        - 8080:8080
