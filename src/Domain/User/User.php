@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="userbase")
  * @ORM\Entity
  */
 class User implements JsonSerializable
@@ -369,14 +369,14 @@ class User implements JsonSerializable
         return $this;
     }
 
-    public function getIdLogin() : int
+    public function getLogin()
     {
         return $this->login;
     }
 
-    public function setIdLogin(int $idLogin)
+    public function setLogin($login)
     {
-        $this->login = $idLogin; 
+        $this->login = $login; 
     }
 
 }

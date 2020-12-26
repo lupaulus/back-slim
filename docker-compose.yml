@@ -6,7 +6,8 @@ volumes:
 
 services:
     slim:
-        image: php:7-alpine
+        build: 
+            context: .
         working_dir: /var/www
         command: php -S 0.0.0.0:8000 -t public
         restart: always

@@ -24,7 +24,7 @@ interface LoginRepository
      */
     public function findbyUsername(string $username):Login;
 
-    public function createLogin(Login $username): int;
+    public function createLogin(Login $username): Login;
 
     
 }

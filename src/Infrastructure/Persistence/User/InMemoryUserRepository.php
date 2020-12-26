@@ -82,8 +82,8 @@ class InMemoryUserRepository implements UserRepository
         $l = new Login();
         $l->setUsername($user->username);
         $l->setPassword($user->password);
-        $idLogin = $this->loginRepository->createLogin($l);
-        $user->setIdLogin($idLogin);
+        $login = $this->loginRepository->createLogin($l);
+        $user->setLogin($login);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         return -1; 

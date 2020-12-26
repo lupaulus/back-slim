@@ -26,7 +26,7 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
                 'connection' => [
                     'driver'   => 'pdo_pgsql',
-                    'host'     => 'localhost',
+                    'host'     => 'db',
                     'dbname'   => 'dbshop',
                     'user'     => 'dbshop',
                     'password' => 'changeme',

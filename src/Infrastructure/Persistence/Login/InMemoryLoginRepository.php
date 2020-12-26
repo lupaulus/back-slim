@@ -35,7 +35,7 @@ class InMemoryLoginRepository implements LoginRepository
      */
     public function findAll(): array
     {
-        $loginrepo = $this->entityManager->getRepository('login');
+        $loginrepo = $this->entityManager->getRepository(Login::class);
         $res = $loginrepo->findAll();
         return $res;
     }
@@ -47,7 +47,7 @@ class InMemoryLoginRepository implements LoginRepository
      */
     public function findLoginOfId(int $id): Login
     {
-        $loginrepo = $this->entityManager->getRepository('login');
+        $loginrepo = $this->entityManager->getRepository(Login::class);
         $val = $loginrepo->findOneBy(array('idLogin' => $id));
         if($val == null)
         {
@@ -63,7 +63,7 @@ class InMemoryLoginRepository implements LoginRepository
      */
     public function findbyUsername(string $username):Login
     {
-        $loginrepo = $this->entityManager->getRepository('login');
+        $loginrepo = $this->entityManager->getRepository(Login::class);
         $val = $loginrepo->findOneBy(array('username' => $username));
         if($val == null)
         {
@@ -72,18 +72,17 @@ class InMemoryLoginRepository implements LoginRepository
         return $val;
     }
 
-    public function createLogin(Login $loginbase): int
+    public function createLogin(Login $loginbase): Login
     {
         $this->entityManager->persist($loginbase);
         $this->entityManager->flush();
-        $loginrepo = $this->entityManager->getRepository('login');
-        $val = $loginrepo->findOneBy(array('username' => $loginbase->username));
+        $loginrepo = $this->entityManager->getRepository(Login::class);
+        $val = $loginrepo->findOneBy(array('username' => $loginbase->getUsername()));
         if($val == null)
         {
             throw new LoginNotFoundException;
         }
-        return $val->getIdLogin();
-        
+        return $val;
     }
 
 
