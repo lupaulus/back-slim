@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\User;
 
 use App\Domain\Login\Login;
 use App\Domain\Login\LoginRepository;
+use App\Domain\User\LoginNotFoundException;
 use App\Domain\User\User;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
@@ -77,15 +78,27 @@ class InMemoryUserRepository implements UserRepository
         return $val;
     }
 
-    public function createUser(User $user) : int
+    public function createUser(User $user) : bool
     {
         $l = new Login();
         $l->setUsername($user->username);
         $l->setPassword($user->password);
-        $login = $this->loginRepository->createLogin($l);
-        $user->setLogin($login);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-        return -1; 
+        try
+        {
+            $this->loginRepository->findbyUsername($l->getUsername());
+        }
+        catch(LoginNotFoundException $ex)
+        {
+            // if user not exist create them
+            $login = $this->loginRepository->createLogin($l);
+            $user->setLogin($login);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            return true; 
+        }
+        // if user exist with existant username return false
+        return false;
+        
+        
     }
 }

@@ -21,9 +21,13 @@ class AddUser extends UserAction
         $this->logger->debug("obj : ".gettype($array));
         $u = new User();
         $u->set($array);
-        $this->userRepository->createUser($u);
-        $l = new Login();
-        $this->loginRepository->createLogin($l);
-        return $this->respondWithData($array);
+        if($this->userRepository->createUser($u))
+        {
+            //OK with 200
+            return $this->respondWithData($array,200);
+        }
+        // User is not created 501 to client
+        return $this->respondWithData(null,501);
+            
     }
 }

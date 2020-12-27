@@ -22,7 +22,7 @@ interface LoginRepository
      * @return Login
      * @throws LoginNotFoundException
      */
-    public function findbyUsername(string $username):Login;
+    public function findbyUsername(string $username);
 
     public function createLogin(Login $username): Login;
 

@@ -110,4 +110,12 @@ class Login implements JsonSerializable
         ];
     }
 
+    function set($data)
+    {
+        foreach ($data AS $key => $value) 
+        {
+            $this->{$key} = $value;
+        }
+    }
+
 }

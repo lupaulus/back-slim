@@ -25,5 +25,5 @@ interface UserRepository
      */
     public function findUserWithIdLogin(int $idLogin) : User;
 
-    public function createUser(User $user) : int;
+    public function createUser(User $user) : bool;
 }

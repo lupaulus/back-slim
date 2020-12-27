@@ -61,14 +61,10 @@ class InMemoryLoginRepository implements LoginRepository
      * @return Login
      * @throws LoginNotFoundException
      */
-    public function findbyUsername(string $username):Login
+    public function findbyUsername(string $username)
     {
         $loginrepo = $this->entityManager->getRepository(Login::class);
         $val = $loginrepo->findOneBy(array('username' => $username));
-        if($val == null)
-        {
-            throw new LoginNotFoundException;
-        }
         return $val;
     }
 
