@@ -5,10 +5,8 @@ namespace App\Infrastructure\Persistence\Login;
 
 use App\Domain\Login\Login;
 use App\Domain\Login\LoginRepository;
-use App\Domain\User\LoginNotFoundException;
+use App\Domain\Login\LoginNotFoundException;
 use Doctrine\ORM\EntityManager;
-use Logindb;
-
 
 class InMemoryLoginRepository implements LoginRepository
 {
@@ -51,7 +49,7 @@ class InMemoryLoginRepository implements LoginRepository
         $val = $loginrepo->findOneBy(array('idLogin' => $id));
         if($val == null)
         {
-            throw new LoginNotFoundException;
+            throw new LoginNotFoundException();
         }
         return $val;
     }
@@ -65,6 +63,10 @@ class InMemoryLoginRepository implements LoginRepository
     {
         $loginrepo = $this->entityManager->getRepository(Login::class);
         $val = $loginrepo->findOneBy(array('username' => $username));
+        if($val == null)
+        {
+            throw new LoginNotFoundException();
+        }
         return $val;
     }
 
@@ -76,7 +78,7 @@ class InMemoryLoginRepository implements LoginRepository
         $val = $loginrepo->findOneBy(array('username' => $loginbase->getUsername()));
         if($val == null)
         {
-            throw new LoginNotFoundException;
+            throw new LoginNotFoundException();
         }
         return $val;
     }

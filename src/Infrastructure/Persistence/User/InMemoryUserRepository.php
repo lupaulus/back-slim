@@ -5,12 +5,12 @@ namespace App\Infrastructure\Persistence\User;
 
 use App\Domain\Login\Login;
 use App\Domain\Login\LoginRepository;
-use App\Domain\User\LoginNotFoundException;
+use App\Domain\Login\LoginNotFoundException;
 use App\Domain\User\User;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
 use Doctrine\ORM\EntityManager;
-use Userdb;
+use Psr\Log\LoggerInterface;
 
 
 class InMemoryUserRepository implements UserRepository
@@ -23,6 +23,8 @@ class InMemoryUserRepository implements UserRepository
      */
     private $loginRepository;
 
+    private $logger;
+
     private $entityManager;
 
     /**
@@ -30,10 +32,11 @@ class InMemoryUserRepository implements UserRepository
      *
      * @param array|null $users
      */
-    public function __construct(LoginRepository $loginRepository, EntityManager $entityManager)
+    public function __construct(LoggerInterface $logger,LoginRepository $loginRepository, EntityManager $entityManager)
     {
         $this->loginRepository = $loginRepository;
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -80,18 +83,22 @@ class InMemoryUserRepository implements UserRepository
 
     public function createUser(User $user) : bool
     {
+        $this->logger->debug("Login created");
         $l = new Login();
         $l->setUsername($user->username);
         $l->setPassword($user->password);
         try
         {
+            $this->logger->debug("Search for Login");
             $this->loginRepository->findbyUsername($l->getUsername());
         }
         catch(LoginNotFoundException $ex)
         {
+            $this->logger->debug("Login not exist, Login will persist");
             // if user not exist create them
             $login = $this->loginRepository->createLogin($l);
             $user->setLogin($login);
+            $this->logger->debug("User will persist");
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             return true; 
