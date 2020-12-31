@@ -6,8 +6,7 @@ namespace App\Application\Actions\Login;
 
 use Firebase\JWT\JWT;
 use App\Domain\Login\Login;
-use App\Domain\Login\LoginRepository;
-use App\Infrastructure\Persistence\Login\InMemoryLoginRepository;
+use App\Domain\Login\LoginNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class LoginAsAction extends LoginAction
@@ -17,6 +16,7 @@ class LoginAsAction extends LoginAction
      */
     protected function action(): Response
     {
+        $this->response = $this->response->withHeader("Content-Type", "application/json");
         $this->logger->debug("Login Action: Login");
         $json = $this->request->getBody();
         $this->logger->debug("Data array user : ".strval($json));
@@ -24,14 +24,20 @@ class LoginAsAction extends LoginAction
         $login = new Login();
         $login->set($array);
         $userid = $login->getUsername();
-        $user = $this->loginRepository->findbyUsername($userid);
-
-        if($user == null)
+        try
+        {
+            $user = $this->loginRepository->findbyUsername($userid);
+        }
+        catch(LoginNotFoundException $e)
         {
             $this->logger->debug("Login Action: User null");
             // No user with this username
-            return $this->response->withStatus(501);
+            $this->response = $this->response->withStatus(400);
+            $this->response->getBody()->write(json_encode(array("error" => "User not exists")));
+            return $this->response;
         }
+    
+        
         // Check if it is the right user
         if($user->getPassword() == $login->getPassword())
         {
@@ -40,12 +46,15 @@ class LoginAsAction extends LoginAction
             $expirationTime= $issuedAt+60; // jwtvalid for 60 seconds from the issued time
             $payload = array('userid' => $userid,'iat' => $issuedAt,'exp' => $expirationTime);
             $token = JWT::encode($payload,JWT_SECRET, "HS256");
-            $this->response = $this->response->withHeader("Authorization", "Bearer {$token}")->withHeader("Content-Type", "application/json");
-            $this->response->withStatus(200);
+            $this->response = $this->response->withHeader("Authorization", "Bearer {$token}");
+            $this->response->getBody()->write(json_encode($this->userRepository->findUserWithIdLogin($user->getIdLogin())));
             return $this->response;
         }
         // Wrong password
         $this->logger->debug("Login Action: WrongPassword");
-        return $this->response->withStatus(502);
+        $this->response = $this->response->withStatus(400);
+        $this->response->getBody()->write(json_encode(array("error" => "Wrong password")));
+        
+        return $this->response;
     }
 }

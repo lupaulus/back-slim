@@ -26,8 +26,8 @@ class AddUser extends UserAction
             //OK with 200
             return $this->respondWithData($array,200);
         }
-        // User is not created 501 to client
-        return $this->respondWithData(null,501);
+        // User is not created 400 to client
+        return $this->respondWithData(json_encode(array("error" => "client not created")),400);
             
     }
 }

@@ -88,22 +88,6 @@ class User implements JsonSerializable
     public function __construct()
     {}
 
-    public static function constructClassic(?int $id, string $username,string $password, string $firstName, string $lastName, 
-    string $address, string $zipcode, string $tel, string $city, string $mail, string $country) : User
-    {
-        $u = new User();
-        $u->id = $id;
-        $u->username = $username;
-        $u->password = $password;
-        $u->firstName = ucfirst($firstName);
-        $u->lastName = ucfirst($lastName);
-        $u->address = $address;
-        $u->zipcode = $zipcode;
-        $u->tel = $city;
-        $u->mail = $mail;
-        $u->country = $country;
-        return $u;
-    }
 
     function set($data)
     {
@@ -153,13 +137,6 @@ class User implements JsonSerializable
         return $this->address;
     }
 
-    /**
-     * Get the value of password
-     */ 
-    public function getPassword()
-    {
-        return $this->password;
-    }
 
     /**
      * Get the value of zipcode
@@ -209,8 +186,6 @@ class User implements JsonSerializable
         return [
             'id' => $this->id,
             'civilite' => $this->civilite,
-            'username' => $this->username,
-            'password' => $this->password,
             'firstName' => $this->firstName,
             'lastName' => $this->lastName,
             'address' => $this->address,
