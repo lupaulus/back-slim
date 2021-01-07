@@ -24,4 +24,10 @@ return function (App $app) {
     $app->post('/signin', AddUser::class);
 
     $app->post('/login', LoginAsAction::class);
+
+    $app->get('/api/produit', GetProduit::class);
+
+    $app->post('/api/order', CreateOrder::class);
+
+    $app->get('/api/order', GetOrder::class);
 };

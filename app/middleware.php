@@ -9,7 +9,6 @@ use App\Application\Middleware\SessionMiddleware;
 const JWT_SECRET = "makey1234567";
 
 return function (App $app) {
-    //$app->add(SessionMiddleware::class);
     $app->add(new JwtAuthentication([
         "path" => "/api",
         "secure" => false,
