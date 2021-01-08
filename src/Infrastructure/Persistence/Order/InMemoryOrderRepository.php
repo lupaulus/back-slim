@@ -1,40 +1,37 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\User;
+namespace App\Infrastructure\Persistence\Order;
 
-use App\Domain\Login\Login;
-use App\Domain\Login\LoginRepository;
-use App\Domain\Login\LoginNotFoundException;
-use App\Domain\User\User;
-use App\Domain\User\UserNotFoundException;
-use App\Domain\User\UserRepository;
+use App\Domain\Order\Order;
+use App\Domain\Order\OrderRepository;
+use App\Domain\Order\OrderNotFoundException;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 
 
-class InMemoryOrderRepository implements UserRepository
+class InMemoryOrderRepository implements OrderRepository
 {
 
 
     /**
-     * @var LoginRepository
+     * @var OrderRepository
      *
      */
-    private $loginRepository;
+    private $OrderRepository;
 
     private $logger;
 
     private $entityManager;
 
     /**
-     * InMemoryUserRepository constructor.
+     * InMemoryOrderRepository constructor.
      *
-     * @param array|null $users
+     * @param array|null $Orders
      */
-    public function __construct(LoggerInterface $logger,LoginRepository $loginRepository, EntityManager $entityManager)
+    public function __construct(LoggerInterface $logger,OrderRepository $OrderRepository, EntityManager $entityManager)
     {
-        $this->loginRepository = $loginRepository;
+        $this->OrderRepository = $OrderRepository;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
     }
@@ -44,8 +41,8 @@ class InMemoryOrderRepository implements UserRepository
      */
     public function findAll(): array
     {
-        $loginrepo = $this->entityManager->getRepository(User::class);
-        $res = $loginrepo->findAll();
+        $Orderrepo = $this->entityManager->getRepository(Order::class);
+        $res = $Orderrepo->findAll();
         return $res;
 
     }
@@ -53,55 +50,23 @@ class InMemoryOrderRepository implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function findUserOfId(int $id): User
+    public function findOrderOfId(int $id): Order
     {
-        $loginrepo = $this->entityManager->getRepository(User::class);
-        $val = $loginrepo->findOneBy(array('idUser' => $id));
+        $Orderrepo = $this->entityManager->getRepository(Order::class);
+        $val = $Orderrepo->findOneBy(array('idOrder' => $id));
         if($val == null)
         {
-            throw new UserNotFoundException;
+            throw new OrderNotFoundException;
         }
         return $val;
     }
     
-
-    /**
-     * @param int $id
-     * @return User
-     * @throws UserNotFoundException
-     */
-    public function findUserWithIdLogin(int $idLogin) : User
+    public function createOrder(Order $Order) : bool
     {
-        $userrepo = $this->entityManager->getRepository(User::class);
-        $val = $userrepo->findOneBy(array('login' => $idLogin));
-        return $val;
-    }
-
-    public function createUser(User $user) : bool
-    {
-        $this->logger->debug("Login created");
-        $l = new Login();
-        $l->setUsername($user->username);
-        $l->setPassword($user->password);
-        try
-        {
-            $this->logger->debug("Search for Login");
-            $this->loginRepository->findbyUsername($l->getUsername());
-        }
-        catch(LoginNotFoundException $ex)
-        {
-            $this->logger->debug("Login not exist, Login will persist");
-            // if user not exist create them
-            $login = $this->loginRepository->createLogin($l);
-            $user->setLogin($login);
-            $this->logger->debug("User will persist");
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-            return true; 
-        }
-        // if user exist with existant username return false
-        return false;
-        
+        $this->logger->debug("Order created");
+        $this->entityManager->persist($Order);
+        $this->entityManager->flush();
+        return true;
         
     }
 }

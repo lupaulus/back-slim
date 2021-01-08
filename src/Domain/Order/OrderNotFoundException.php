@@ -7,7 +7,7 @@ use App\Domain\DomainException\DomainRecordNotFoundException;
 
 class OrderNotFoundException extends DomainRecordNotFoundException
 {
-    public $message = 'The user you requested does not exist.';
+    public $message = 'The order you requested does not exist.';
     
     public function __construct()
     {}

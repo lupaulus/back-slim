@@ -7,23 +7,17 @@ interface OrderRepository
 {
     
     /**
-     * @return User[]
+     * @return Order[]
      */
     public function findAll(): array;
 
     /**
      * @param int $id
-     * @return User
-     * @throws UserNotFoundException
+     * @return Order
+     * @throws OrderNotFoundException
      */
-    public function findUserOfId(int $id): Order;
+    public function findOrderOfId(int $id): Order;
 
-    /**
-     * @param int $id
-     * @return User
-     * @throws UserNotFoundException
-     */
-    public function findUserWithIdLogin(int $idLogin) : Order;
 
-    public function createUser(Order $user) : bool;
+    public function createOrder(Order $Order) : bool;
 }

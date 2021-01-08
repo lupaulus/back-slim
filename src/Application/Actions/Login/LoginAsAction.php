@@ -26,7 +26,7 @@ class LoginAsAction extends LoginAction
         $userid = $login->getUsername();
         try
         {
-            $user = $this->loginRepository->findbyUsername($userid);
+            $user = $this->loginRepository->findbyUsername($login->getUsername());
         }
         catch(LoginNotFoundException $e)
         {
@@ -43,9 +43,10 @@ class LoginAsAction extends LoginAction
         {
             $this->logger->debug("Login Action: Login successfull, token generated");
             $issuedAt= time();
-            $expirationTime= $issuedAt+60; // jwtvalid for 60 seconds from the issued time
+            $expirationTime= $issuedAt+3600; // jwtvalid for 3600 seconds from the issued time
             $payload = array('userid' => $userid,'iat' => $issuedAt,'exp' => $expirationTime);
             $token = JWT::encode($payload,JWT_SECRET, "HS256");
+            $this->logger->debug("token = {$token}");
             $this->response = $this->response->withHeader("Authorization", "Bearer {$token}");
             $this->response->getBody()->write(json_encode($this->userRepository->findUserWithIdLogin($user->getIdLogin())));
             return $this->response;

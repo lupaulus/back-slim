@@ -16,14 +16,7 @@ interface ProductRepository
      * @return Product
      * @throws ProductNotFoudException
      */
-    public function findProductOfId(int $id): ProductRepository;
+    public function findProductOfId(int $id): Product;
 
-    /**
-     * @param int $id
-     * @return Product
-     * @throws ProductNotFoudException
-     */
-    public function findProductWithIdLogin(int $idLogin) : ProductRepository;
-
-    public function createProduct(ProductRepository $Product) : bool;
+    public function createProduct(Product $Product) : bool;
 }
