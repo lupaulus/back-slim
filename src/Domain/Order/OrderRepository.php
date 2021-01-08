@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\User;
+namespace App\Domain\Order;
 
 interface OrderRepository
 {
@@ -16,14 +16,14 @@ interface OrderRepository
      * @return User
      * @throws UserNotFoundException
      */
-    public function findUserOfId(int $id): User;
+    public function findUserOfId(int $id): Order;
 
     /**
      * @param int $id
      * @return User
      * @throws UserNotFoundException
      */
-    public function findUserWithIdLogin(int $idLogin) : User;
+    public function findUserWithIdLogin(int $idLogin) : Order;
 
-    public function createUser(User $user) : bool;
+    public function createUser(Order $user) : bool;
 }

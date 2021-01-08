@@ -25,9 +25,9 @@ return function (App $app) {
 
     $app->post('/login', LoginAsAction::class);
 
-    $app->get('/api/produit', GetProduit::class);
+    $app->get('/api/produit', GetProduitAsAction::class);
 
-    $app->post('/api/order', CreateOrder::class);
+    $app->post('/api/order', PostOrderAction::class);
 
-    $app->get('/api/order', GetOrder::class);
+    $app->get('/api/order', GetOrderAction::class);
 };

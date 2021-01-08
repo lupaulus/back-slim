@@ -1,29 +1,29 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\User;
+namespace App\Domain\Product;
 
 interface ProductRepository
 {
     
     /**
-     * @return User[]
+     * @return Product[]
      */
     public function findAll(): array;
 
     /**
      * @param int $id
-     * @return User
-     * @throws UserNotFoundException
+     * @return Product
+     * @throws ProductNotFoudException
      */
-    public function findUserOfId(int $id): User;
+    public function findProductOfId(int $id): ProductRepository;
 
     /**
      * @param int $id
-     * @return User
-     * @throws UserNotFoundException
+     * @return Product
+     * @throws ProductNotFoudException
      */
-    public function findUserWithIdLogin(int $idLogin) : User;
+    public function findProductWithIdLogin(int $idLogin) : ProductRepository;
 
-    public function createUser(User $user) : bool;
+    public function createProduct(ProductRepository $Product) : bool;
 }
