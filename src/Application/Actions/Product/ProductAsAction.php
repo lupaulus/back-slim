@@ -12,6 +12,7 @@ class ProductAsAction extends ProductAction
      */
     protected function action(): Response
     {
+        $this->response = $this->response->withHeader("Content-Type", "application/json");
         $arrayP = $this->productRepository->findAll();
         $this->response->getBody()->write(json_encode($arrayP));
         return $this->response;

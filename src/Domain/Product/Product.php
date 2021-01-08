@@ -34,7 +34,7 @@ class Product implements JsonSerializable
     /**
      * @var string
      * 
-     * @ORM\Column(name="desc", type="string", length=256, nullable=true)
+     * @ORM\Column(name="description", type="string", length=256, nullable=true)
      */
     private $desc;
     /**

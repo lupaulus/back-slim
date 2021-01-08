@@ -3,19 +3,16 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Product;
 
-use App\Domain\Login\Login;
-use App\Domain\Login\LoginRepository;
-use App\Domain\Login\LoginNotFoundException;
 use App\Domain\Product\Product;
 use App\Domain\Product\ProductNotFoundException;
 use App\Domain\Product\ProductRepository;
 use Doctrine\ORM\EntityManager;
+use globalClass;
 use Psr\Log\LoggerInterface;
 
 
 class InMemoryProductRepository implements ProductRepository
 {
-
     private $logger;
 
     private $entityManager;
@@ -30,13 +27,19 @@ class InMemoryProductRepository implements ProductRepository
         $this->entityManager = $entityManager;
         $this->logger = $logger;
 
-        $this->logger->debug("CreateObjProduit");
-        $arrayp = json_decode($this->rawContent);
-        foreach($arrayp as $product)
+        if(count($this->findAll()) == 0)
         {
-            $this->entityManager->persist($product);
-            $this->entityManager->flush();
+            $this->logger->debug("CreateObjProduit");
+            $arrayp = json_decode($this->rawContent);
+            foreach($arrayp as $productJson)
+            {
+                $product = new Product();
+                $product->set($productJson);
+                $this->entityManager->persist($product);
+                $this->entityManager->flush();
+            }
         }
+        
     }
 
     /**
@@ -75,25 +78,22 @@ class InMemoryProductRepository implements ProductRepository
     private $rawContent =   
     '[
         {
-           "id":"1",
-           "nom":"Estomac de Porc Farci",
+           "name":"Estomac de Porc Farci",
            "image":"https://www.alsace-charcuterie.fr/store/61-large_default/estomac-de-porc-farci-2-kg.jpg",
-           "desc":"Produit phare qui a fait la réputation de notre établissement, lestomac de porc est farci à bse d\'épaule de porc, de pommes de terres, de poireaux, de carottes, d\'oignon,d\'épices»",
-           "prix":"18"
+           "desc":"Produit phare qui a fait la reputation de notre etablissement, lestomac de porc est farci a bse depaule de porc, de pommes de terres, de poireaux, de carottes, doignon,depices",
+           "price":18.0
         },
         {
-           "id":"2",
-           "nom":"Saucisse de Pommes de Terre",
+           "name":"Saucisse de Pommes de Terre",
            "image":"https://www.alsace-charcuterie.fr/store/71-large_default/saucisse-de-pommes-de-terre-500-gr.jpg",
-           "desc":"Repas complet qui allie une viande de porc finement hachée et parfumée au vin blanc dAlsace avec des dés de pommes de terre et des fins morceaux de carottes et de poireaux entonné dans du boyau.",
-           "prix":"16"
+           "desc":"Repas complet qui allie une viande de porc finement hachee et parfumee au vin blanc dAlsace avec des des de pommes de terre et des fins morceaux de carottes et de poireaux entonne dans du boyau.",
+           "price":16.0
         },
         {
-           "id":"3",
-           "nom":"Boudin",
+           "name":"Boudin",
            "image":"https://www.alsace-charcuterie.fr/store/24-large_default/boudin-noir-traditionnel-370-gr.jpg",
-           "desc":"Paquet de 3 pièces Le boudin noir est un produit cuit à base de sang, de gras, de tête de porc, doignons et damidon entonné dans du boyau.",
-           "prix":"12"
+           "desc":"Paquet de 3 pieces Le boudin noir est un produit cuit a base de sang, de gras, de tête de porc, doignons et damidon entonne dans du boyau.",
+           "price":12.0
         }
      ]';
    
