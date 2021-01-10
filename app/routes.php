@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Slim\App;
 use App\Application\Actions\Login\LoginAsAction;
+use App\Application\Actions\Order\PostOrderAction;
 use App\Application\Actions\Product\ProductAsAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Application\Actions\User\AddUser;
@@ -17,7 +18,10 @@ return function (App $app) {
         // CORS Pre-Flight OPTIONS Request Handler
         $response->withHeader("Content-Type", "application/json")
         ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST');
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Credentials','true' );
+        
 
         return $response;
     });
@@ -30,6 +34,4 @@ return function (App $app) {
     $app->get('/api/product', ProductAsAction::class);
 
     $app->post('/api/order', PostOrderAction::class);
-
-    $app->get('/api/order', GetOrderAction::class);
 };

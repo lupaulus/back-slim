@@ -16,7 +16,7 @@ interface OrderRepository
      * @return Order
      * @throws OrderNotFoundException
      */
-    public function findOrderOfId(int $id): Order;
+    public function findOrderOfId(int $id): array;
 
 
     public function createOrder(Order $Order) : bool;

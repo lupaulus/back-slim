@@ -44,8 +44,8 @@ class InMemoryUserRepository implements UserRepository
      */
     public function findAll(): array
     {
-        $loginrepo = $this->entityManager->getRepository(User::class);
-        $res = $loginrepo->findAll();
+        $userrepo = $this->entityManager->getRepository(User::class);
+        $res = $userrepo->findAll();
         return $res;
 
     }
@@ -55,8 +55,8 @@ class InMemoryUserRepository implements UserRepository
      */
     public function findUserOfId(int $id): User
     {
-        $loginrepo = $this->entityManager->getRepository(User::class);
-        $val = $loginrepo->findOneBy(array('idUser' => $id));
+        $userrepo = $this->entityManager->getRepository(User::class);
+        $val = $userrepo->findOneBy(array('id' => $id));
         if($val == null)
         {
             throw new UserNotFoundException;

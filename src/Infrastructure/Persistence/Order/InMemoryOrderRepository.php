@@ -6,19 +6,13 @@ namespace App\Infrastructure\Persistence\Order;
 use App\Domain\Order\Order;
 use App\Domain\Order\OrderRepository;
 use App\Domain\Order\OrderNotFoundException;
+use App\Domain\User\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 
 
 class InMemoryOrderRepository implements OrderRepository
 {
-
-
-    /**
-     * @var OrderRepository
-     *
-     */
-    private $OrderRepository;
 
     private $logger;
 
@@ -29,9 +23,8 @@ class InMemoryOrderRepository implements OrderRepository
      *
      * @param array|null $Orders
      */
-    public function __construct(LoggerInterface $logger,OrderRepository $OrderRepository, EntityManager $entityManager)
+    public function __construct(LoggerInterface $logger, EntityManager $entityManager)
     {
-        $this->OrderRepository = $OrderRepository;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
     }
@@ -50,10 +43,10 @@ class InMemoryOrderRepository implements OrderRepository
     /**
      * {@inheritdoc}
      */
-    public function findOrderOfId(int $id): Order
+    public function findOrderOfId(int $id): array
     {
         $Orderrepo = $this->entityManager->getRepository(Order::class);
-        $val = $Orderrepo->findOneBy(array('idOrder' => $id));
+        $val = $Orderrepo->findBy(array('idOrder' => $id));
         if($val == null)
         {
             throw new OrderNotFoundException;

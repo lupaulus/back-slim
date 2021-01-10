@@ -7,6 +7,7 @@ use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
 use \Doctrine\Common\Collections\ArrayCollection;
 use App\Domain\Product\Product;
+use App\Domain\User\User;
 
 /**
  * Order
@@ -33,12 +34,12 @@ class Order implements JsonSerializable
     private $idUser;
 
     /**
-     * @var Product
+     * @var ArrayCollection
      * 
      * @ORM\ManyToMany(targetEntity="App\Domain\Product\Product")
      * @ORM\JoinTable(name="orders_product",
      * joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="idOrder")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="idProduct", unique=true)})
+     * inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="idProduct", unique=false)})
      */
     private $products;
     
@@ -54,15 +55,25 @@ class Order implements JsonSerializable
             $this->{$key} = $value;
         }
     }
+
+    function setUser(User $user){
+        $this->idUser = $user;
+    }
+
+    function addProduct(Product $p)
+    {
+        $this->products->add($p);
+    }
     /**
      * @return array
      */
     public function jsonSerialize()
     {
-        
+
         return [
-            'id' => $this->id,
-            'products' => $this->products
+            'id' => $this->idOrder,
+            // 'idUser' => json_encode($this->idUser),
+            'products' => json_encode($this->products)
         ];
     }
 
